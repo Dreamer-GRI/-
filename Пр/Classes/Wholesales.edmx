@@ -1,0 +1,259 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище wholesaleModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Athletes">
+          <Key>
+            <PropertyRef Name="id_Athletes" />
+          </Key>
+          <Property Name="id_Athletes" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FIO" Type="nvarchar" MaxLength="50" />
+          <Property Name="age" Type="int" />
+        </EntityType>
+        <EntityType Name="Sport">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="record_date" Type="date" Nullable="false" />
+          <Property Name="world_rec" Type="float" />
+          <Property Name="Sport_name" Type="nvarchar" MaxLength="50" />
+          <Property Name="unit_of_meas" Type="nvarchar" MaxLength="50" />
+          <Property Name="id_Athletes" Type="int" />
+        </EntityType>
+        <EntityType Name="USERS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Login" Type="nvarchar" MaxLength="50" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+          <Property Name="id_Athletes" Type="int" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "wholesale.dbo.datgVieW" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="datgVieW">
+          <Key>
+            <PropertyRef Name="record_date" />
+            <PropertyRef Name="id_Athletes" />
+          </Key>
+          <Property Name="record_date" Type="date" Nullable="false" />
+          <Property Name="world_rec" Type="float" />
+          <Property Name="Sport_name" Type="nvarchar" MaxLength="50" />
+          <Property Name="unit_of_meas" Type="nvarchar" MaxLength="50" />
+          <Property Name="FIO" Type="nvarchar" MaxLength="50" />
+          <Property Name="age" Type="int" />
+          <Property Name="id_Athletes" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Sport_Athletes">
+          <End Role="Athletes" Type="Self.Athletes" Multiplicity="0..1" />
+          <End Role="Sport" Type="Self.Sport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Athletes">
+              <PropertyRef Name="id_Athletes" />
+            </Principal>
+            <Dependent Role="Sport">
+              <PropertyRef Name="id_Athletes" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USERS_Athletes">
+          <End Role="Athletes" Type="Self.Athletes" Multiplicity="0..1" />
+          <End Role="USERS" Type="Self.USERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Athletes">
+              <PropertyRef Name="id_Athletes" />
+            </Principal>
+            <Dependent Role="USERS">
+              <PropertyRef Name="id_Athletes" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище wholesaleModelContainer">
+          <EntitySet Name="Athletes" EntityType="Self.Athletes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sport" EntityType="Self.Sport" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USERS" EntityType="Self.USERS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="datgVieW" EntityType="Self.datgVieW" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [datgVieW].[record_date] AS [record_date], 
+    [datgVieW].[world_rec] AS [world_rec], 
+    [datgVieW].[Sport_name] AS [Sport_name], 
+    [datgVieW].[unit_of_meas] AS [unit_of_meas], 
+    [datgVieW].[FIO] AS [FIO], 
+    [datgVieW].[age] AS [age], 
+    [datgVieW].[id_Athletes] AS [id_Athletes]
+    FROM [dbo].[datgVieW] AS [datgVieW]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Sport_Athletes" Association="Self.FK_Sport_Athletes">
+            <End Role="Athletes" EntitySet="Athletes" />
+            <End Role="Sport" EntitySet="Sport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USERS_Athletes" Association="Self.FK_USERS_Athletes">
+            <End Role="Athletes" EntitySet="Athletes" />
+            <End Role="USERS" EntitySet="USERS" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="wholesaleModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Athletes">
+          <Key>
+            <PropertyRef Name="id_Athletes" />
+          </Key>
+          <Property Name="id_Athletes" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FIO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="age" Type="Int32" />
+          <NavigationProperty Name="Sport" Relationship="Self.FK_Sport_Athletes" FromRole="Athletes" ToRole="Sport" />
+          <NavigationProperty Name="USERS" Relationship="Self.FK_USERS_Athletes" FromRole="Athletes" ToRole="USERS" />
+        </EntityType>
+        <EntityType Name="Sport">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="record_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="world_rec" Type="Double" />
+          <Property Name="Sport_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="unit_of_meas" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="id_Athletes" Type="Int32" />
+          <NavigationProperty Name="Athletes" Relationship="Self.FK_Sport_Athletes" FromRole="Sport" ToRole="Athletes" />
+        </EntityType>
+        <EntityType Name="USERS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="id_Athletes" Type="Int32" />
+          <NavigationProperty Name="Athletes" Relationship="Self.FK_USERS_Athletes" FromRole="USERS" ToRole="Athletes" />
+        </EntityType>
+        <Association Name="FK_Sport_Athletes">
+          <End Role="Athletes" Type="Self.Athletes" Multiplicity="0..1" />
+          <End Role="Sport" Type="Self.Sport" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Athletes">
+              <PropertyRef Name="id_Athletes" />
+            </Principal>
+            <Dependent Role="Sport">
+              <PropertyRef Name="id_Athletes" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USERS_Athletes">
+          <End Role="Athletes" Type="Self.Athletes" Multiplicity="0..1" />
+          <End Role="USERS" Type="Self.USERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Athletes">
+              <PropertyRef Name="id_Athletes" />
+            </Principal>
+            <Dependent Role="USERS">
+              <PropertyRef Name="id_Athletes" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="wholesaleEntities4" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Athletes" EntityType="Self.Athletes" />
+          <EntitySet Name="Sport" EntityType="Self.Sport" />
+          <EntitySet Name="USERS" EntityType="Self.USERS" />
+          <AssociationSet Name="FK_Sport_Athletes" Association="Self.FK_Sport_Athletes">
+            <End Role="Athletes" EntitySet="Athletes" />
+            <End Role="Sport" EntitySet="Sport" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USERS_Athletes" Association="Self.FK_USERS_Athletes">
+            <End Role="Athletes" EntitySet="Athletes" />
+            <End Role="USERS" EntitySet="USERS" />
+          </AssociationSet>
+          <EntitySet Name="datgVieW" EntityType="wholesaleModel.datgVieW" />
+        </EntityContainer>
+        <EntityType Name="datgVieW">
+          <Key>
+            <PropertyRef Name="record_date" />
+            <PropertyRef Name="id_Athletes" />
+          </Key>
+          <Property Name="record_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="world_rec" Type="Double" />
+          <Property Name="Sport_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="unit_of_meas" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FIO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="age" Type="Int32" />
+          <Property Name="id_Athletes" Type="Int32" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище wholesaleModelContainer" CdmEntityContainer="wholesaleEntities4">
+          <EntitySetMapping Name="Athletes">
+            <EntityTypeMapping TypeName="wholesaleModel.Athletes">
+              <MappingFragment StoreEntitySet="Athletes">
+                <ScalarProperty Name="id_Athletes" ColumnName="id_Athletes" />
+                <ScalarProperty Name="FIO" ColumnName="FIO" />
+                <ScalarProperty Name="age" ColumnName="age" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sport">
+            <EntityTypeMapping TypeName="wholesaleModel.Sport">
+              <MappingFragment StoreEntitySet="Sport">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="record_date" ColumnName="record_date" />
+                <ScalarProperty Name="world_rec" ColumnName="world_rec" />
+                <ScalarProperty Name="Sport_name" ColumnName="Sport_name" />
+                <ScalarProperty Name="unit_of_meas" ColumnName="unit_of_meas" />
+                <ScalarProperty Name="id_Athletes" ColumnName="id_Athletes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USERS">
+            <EntityTypeMapping TypeName="wholesaleModel.USERS">
+              <MappingFragment StoreEntitySet="USERS">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="id_Athletes" ColumnName="id_Athletes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="datgVieW">
+            <EntityTypeMapping TypeName="wholesaleModel.datgVieW">
+              <MappingFragment StoreEntitySet="datgVieW">
+                <ScalarProperty Name="id_Athletes" ColumnName="id_Athletes" />
+                <ScalarProperty Name="age" ColumnName="age" />
+                <ScalarProperty Name="FIO" ColumnName="FIO" />
+                <ScalarProperty Name="unit_of_meas" ColumnName="unit_of_meas" />
+                <ScalarProperty Name="Sport_name" ColumnName="Sport_name" />
+                <ScalarProperty Name="world_rec" ColumnName="world_rec" />
+                <ScalarProperty Name="record_date" ColumnName="record_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
